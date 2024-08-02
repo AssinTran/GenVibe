@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.20" />
+    <PackageReference Include="MongoDB.Driver" Version="2.28.0">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Asset\BUS\Auth\" />
+    <Folder Include="Asset\BUS\Common\" />
+    <Folder Include="Asset\BUS\Conversation\" />
+    <Folder Include="Asset\DAL\Conversation\" />
+  </ItemGroup>
+
+</Project>
