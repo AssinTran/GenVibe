@@ -1,9 +1,26 @@
-﻿namespace GenVibeServer.Asset.DAL.Auth
+﻿using GenVibeServer.Asset.DAL.Database;
+using GenVibeServer.Asset.DTO.Common;
+using Microsoft.VisualBasic;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using BCrypt.Net;
+
+namespace GenVibeServer.Asset.DAL.Auth
 {
     public class AuthDAO
     {
         #region Singleton
-        AuthDAO() { }
+        /*
+        * @attribute error - contain error message
+        */
+        private string error;
+
+        private IMongoCollection<UserDTO>? collection;
+        AuthDAO()
+        {
+            var connector = Connector.Instance;
+            this.collection = (IMongoCollection<UserDTO>?)connector.Database.GetCollection<BsonDocument>("User");
+        }
         private static AuthDAO instance = null;
         private static readonly object Lock = new object();
         public static AuthDAO Instance
@@ -19,10 +36,6 @@
         #endregion
 
         #region Features
-        /*
-         * @attribute error - contain error message
-         */
-        private string error;
 
         /**
          * Login account to website
@@ -36,7 +49,31 @@
          */
         public bool Login(string username, string password)
         {
-            return false;
+            try
+            {
+                // Check username in database
+                UserDTO user = (UserDTO)collection.Find(s => s.Username == username);
+                if (user == null)
+                {
+                    this.error = "The username does not exist.";
+                    return false;
+                }
+
+                // Check password input with password of object User
+                bool isPassword = BCrypt.Net.BCrypt.Verify(password, user.Password);
+                if (!isPassword)
+                {
+                    this.error = "Username or password incorrect.";
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                this.error = "Internal server error";
+                return false;
+            }
         }
 
         /**
@@ -52,7 +89,32 @@
          */
         public bool Register(UserDTO User)
         {
-            return false;
+            try
+            {
+                // Check username of user
+                UserDTO exist = (UserDTO)collection.Find(s => s.Equals(User.Username));
+                if (exist != null)
+                {
+                    this.error = "The username has existed.";
+                    return false ;
+                }
+
+                // Hash password of user to security
+                string hashed = BCrypt.Net.BCrypt.HashPassword(User.Password);
+                User.Password = hashed;
+
+                // Set avatar for user profile
+                User.Avatar = "https://avatar.iran.liara.run/username?username=" + User.Username;
+
+                collection.InsertOne(User);
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
         #endregion
     }
