@@ -1,22 +1,27 @@
-﻿namespace GenVibeServer.Asset.DTO.Conversation
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace GenVibeServer.Asset.DTO.Conversation
 {
+    [BsonIgnoreExtraElements]
     public class ConversationDTO
     {
         #region Attributes
-        private List<string> participants; // list participants in the conversation
-        private List<string> messages; // list id of message
+        private string[]? participants; // list participants in the conversation
+        private string[]? messages; // list id of message
 
-        public ConversationDTO()
-        {
-            this.participants = new List<string>();
-            this.messages = new List<string>();
-        }
+        public ConversationDTO() { }
 
         #endregion
 
         #region Properties
-        public List<string> Participants { get; set; } // list participants in the conversation
-        public List<string> Messages { get; set; } // list id of message
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+        [BsonElement("participants")]
+        public string[]? Participants { get; set; } // list participants in the conversation
+        [BsonElement("messages")]
+        public string[]? Messages { get; set; } // list id of message
         #endregion
     }
 }

@@ -1,5 +1,9 @@
-﻿namespace GenVibeServer.Asset.DTO.Common
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace GenVibeServer.Asset.DTO.Common
 {
+    [BsonIgnoreExtraElements]
     public class PostDTO
     {
         #region Attributes
@@ -22,12 +26,19 @@
         #endregion
 
         #region Properties
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public required string Id { get; set; }
+        [BsonElement("content")]   
         public required string Content { get; set; }
+        [BsonElement("date")]
         public required DateTime Date { get; set; }
-        public List<string> Likes { get; set; } // list id of user who like the post
-        public List<string> Comments { get; set; } // list id of user who comment the post
-        public List<string> RePost { get; set; } // list id of user who re-post the post
+        [BsonElement("likes")]
+        public string[]? Likes { get; set; } // list id of user who like the post
+        [BsonElement("comments")]
+        public string[]? Comments { get; set; } // list id of user who comment the post
+        [BsonElement("reposts")]
+        public string[]? RePost { get; set; } // list id of user who re-post the post
         #endregion
     }
 }
