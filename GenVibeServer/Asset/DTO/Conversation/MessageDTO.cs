@@ -1,5 +1,9 @@
-﻿namespace GenVibeServer.Asset.DTO.Conversation
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace GenVibeServer.Asset.DTO.Conversation
 {
+    [BsonIgnoreExtraElements]
     public class MessageDTO
     {
         #region Attributes
@@ -19,10 +23,16 @@
         #endregion
 
         #region Properties
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public required string Id { get; set; }
+        [BsonElement("message")]
         public required string Message { get; set; }
+        [BsonElement("date")]
         public DateTime Date { get; set; }
+        [BsonElement("sender")]
         public required string Sender { get; set; }
+        [BsonElement("receiver")]
         public required string Receiver { get; set; }
         #endregion
     }

@@ -1,5 +1,9 @@
-﻿namespace GenVibeServer.Asset.DTO.Common
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace GenVibeServer.Asset.DTO.Common
 {
+    [BsonIgnoreExtraElements]
     public class UserDTO
     {
         #region Attributes
@@ -12,27 +16,36 @@
 
         public UserDTO() { }
 
-        public UserDTO(string username, string password, string email, string phone, string fullname, string avatar)
+        public UserDTO(string username, string password, string email, string phone, string fullname)
         {
             this.username = username;
             this.password = password;
             this.email = email;
             this.phone = phone;
             this.fullname = fullname;
-            this.avatar = avatar;
         }
         #endregion
 
         #region Properties
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public required string Id { get; set; }
+        [BsonElement("username")]
         public required string Username { get; set; }
+        [BsonElement("password")]
         public required string Password { get; set; }
+        [BsonElement("fullname")]
         public required string FullName { get; set; }
+        [BsonElement("email")]
         public required string Email { get; set; }
+        [BsonElement("phone")]
         public string? Phone { get; set; }
+        [BsonElement("avatar")]
         public string? Avatar { get; set; }
-        public List<string> Posts { get; set; } // list id of post
-        public List<string> Friends { get; set; } // list id of friends
+        [BsonElement("posts")]
+        public string[]? Posts { get; set; } // list id of post
+        [BsonElement("friends")]
+        public string[]? Friends { get; set; } // list id of friends
         #endregion
     }
 }
