@@ -4,16 +4,17 @@ using Microsoft.VisualBasic;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using BCrypt.Net;
+using GenVibeServer.Asset.DAL.IAuth;
 
 namespace GenVibeServer.Asset.DAL.Auth
 {
-    public class AuthDAO
+    public class AuthDAO : IAuthDAO
     {
         #region Singleton
         /*
         * @attribute error - contain error message
         */
-        private string error;
+        public string Error {  get; set; }
 
         private IMongoCollection<UserDTO>? collection;
         AuthDAO()
@@ -55,7 +56,7 @@ namespace GenVibeServer.Asset.DAL.Auth
                 UserDTO user = (UserDTO)collection.Find(s => s.Username == username);
                 if (user == null)
                 {
-                    this.error = "The username does not exist.";
+                    this.Error = "The username does not exist.";
                     return false;
                 }
 
@@ -63,7 +64,7 @@ namespace GenVibeServer.Asset.DAL.Auth
                 bool isPassword = BCrypt.Net.BCrypt.Verify(password, user.Password);
                 if (!isPassword)
                 {
-                    this.error = "Username or password incorrect.";
+                    this.Error = "Username or password incorrect.";
                     return false;
                 }
 
@@ -71,7 +72,7 @@ namespace GenVibeServer.Asset.DAL.Auth
             }
             catch (Exception)
             {
-                this.error = "Internal server error";
+                this.Error = "Internal server error";
                 return false;
             }
         }
@@ -95,8 +96,8 @@ namespace GenVibeServer.Asset.DAL.Auth
                 UserDTO exist = (UserDTO)collection.Find(s => s.Equals(User.Username));
                 if (exist != null)
                 {
-                    this.error = "The username has existed.";
-                    return false ;
+                    this.Error = "The username has existed.";
+                    return false;
                 }
 
                 // Hash password of user to security
