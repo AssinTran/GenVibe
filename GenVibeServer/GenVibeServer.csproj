@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.20" />
     <PackageReference Include="MongoDB.Driver" Version="2.28.0">
       <TreatAsUsed>true</TreatAsUsed>
@@ -15,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Asset\BUS\Auth\" />
     <Folder Include="Asset\BUS\Common\" />
     <Folder Include="Asset\BUS\Conversation\" />
     <Folder Include="Asset\DAL\Conversation\" />
