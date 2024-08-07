@@ -8,6 +8,7 @@ namespace GenVibeServer.Asset.BUS.Auth
     {
         private IAuthDAO _authDAO;
         public string Error { get; set; }
+        public string User { get; set; }
         private static AuthBUS? instance;
         private static readonly object Lock = new object();
         AuthBUS()
@@ -28,14 +29,20 @@ namespace GenVibeServer.Asset.BUS.Auth
         #region Enforcement
         public bool Login(string username, string password)
         {
+            bool status = _authDAO.Login(username, password);
             this.Error = _authDAO.Error;
-            return _authDAO.Login(username, password);
+            this.User = _authDAO.User;
+
+            return status;
         }
 
         public bool Register(UserDTO user)
         {
+            bool status = _authDAO.Register(user);
             this.Error = _authDAO.Error;
-            return _authDAO.Register(user);
+            this.User = _authDAO.User;
+            
+            return status;
         }
         #endregion
     }
