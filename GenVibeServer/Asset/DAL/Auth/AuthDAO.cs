@@ -15,12 +15,13 @@ namespace GenVibeServer.Asset.DAL.Auth
         * @attribute error - contain error message
         */
         public string Error {  get; set; }
+        public string User { get; set; }
 
         private IMongoCollection<UserDTO>? collection;
         AuthDAO()
         {
             var connector = Connector.Instance;
-            this.collection = (IMongoCollection<UserDTO>?)connector.Database.GetCollection<BsonDocument>("User");
+            this.collection = connector.Database.GetCollection<UserDTO>("User");
         }
         private static AuthDAO instance = null;
         private static readonly object Lock = new object();
@@ -53,7 +54,7 @@ namespace GenVibeServer.Asset.DAL.Auth
             try
             {
                 // Check username in database
-                UserDTO user = (UserDTO)collection.Find(s => s.Username == username);
+                var user = collection.Find(s => s.Username == $"{username}").FirstOrDefault();
                 if (user == null)
                 {
                     this.Error = "The username does not exist.";
@@ -68,6 +69,7 @@ namespace GenVibeServer.Asset.DAL.Auth
                     return false;
                 }
 
+                this.User = user.ToJson();
                 return true;
             }
             catch (Exception)
@@ -93,7 +95,8 @@ namespace GenVibeServer.Asset.DAL.Auth
             try
             {
                 // Check username of user
-                UserDTO exist = (UserDTO)collection.Find(s => s.Equals(User.Username));
+                var filter = Builders<UserDTO>.Filter.Eq(u => u.Username, $"{User.Username}");
+                var exist = collection.Find(filter).FirstOrDefault();
                 if (exist != null)
                 {
                     this.Error = "The username has existed.";
@@ -109,11 +112,12 @@ namespace GenVibeServer.Asset.DAL.Auth
 
                 collection.InsertOne(User);
 
+                this.User = User.ToJson();
                 return true;
             }
             catch (Exception)
             {
-
+                this.Error = "Internal server error";
                 return false;
             }
         }
