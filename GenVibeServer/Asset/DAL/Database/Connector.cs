@@ -4,13 +4,13 @@ namespace GenVibeServer.Asset.DAL.Database
 {
     public class Connector
     {
-        private IMongoDatabase _database;
+        private MongoClient client;
 
         Connector()
         {
             var connectionString = "mongodb+srv://owner:owner@cluster0.3rp8zzn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-            var client = new MongoClient(connectionString);
-            _database = client.GetDatabase("GenVibe");
+            client = new MongoClient(connectionString);
+            Database = client.GetDatabase("GenVibe");
         }
 
         private static readonly object Lock = new object();
