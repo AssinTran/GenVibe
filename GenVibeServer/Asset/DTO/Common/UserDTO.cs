@@ -29,15 +29,15 @@ namespace GenVibeServer.Asset.DTO.Common
         #region Properties
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public required string Id { get; set; }
+        public string Id { get; set; }
         [BsonElement("username")]
-        public required string Username { get; set; }
+        public string Username { get; set; }
         [BsonElement("password")]
-        public required string Password { get; set; }
+        public string Password { get; set; }
         [BsonElement("fullname")]
-        public required string FullName { get; set; }
+        public string FullName { get; set; }
         [BsonElement("email")]
-        public required string Email { get; set; }
+        public string Email { get; set; }
         [BsonElement("phone")]
         public string? Phone { get; set; }
         [BsonElement("avatar")]
